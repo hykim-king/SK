@@ -133,17 +133,13 @@ public class MainAdminDao {
 
         while (running) {
             System.out.println("\n📋 관리자 메뉴");
-            System.out.println("1. 전체 목록 보기");
-            System.out.println("2. 영화 수정");
-            System.out.println("3. 영화 삭제");
-            System.out.println("4. 종료");
+            System.out.println("1. 영화 수정");
+            System.out.println("2. 영화 삭제");
+            System.out.println("3. 종료");
             System.out.print("선택: ");
 
             switch (sc.nextLine()) {
                 case "1":
-                    for (Movie m : dao.getAll()) System.out.println(m);
-                    break;
-                case "2":
                     System.out.print("수정할 영화 제목: ");
                     String title = sc.nextLine();
                     Movie movie = dao.findByTitle(title);
@@ -159,7 +155,7 @@ public class MainAdminDao {
                     dao.update(movie);
                     System.out.println("✅ 수정 완료");
                     break;
-                case "3":
+                case "2":
                     System.out.print("삭제할 영화 제목: ");
                     if (dao.delete(sc.nextLine())) {
                         System.out.println("🗑️ 삭제 완료");
@@ -167,7 +163,7 @@ public class MainAdminDao {
                         System.out.println("❌ 삭제 실패");
                     }
                     break;
-                case "4":
+                case "":
                     running = false;
                     System.out.println("👋 종료합니다");
                     break;
