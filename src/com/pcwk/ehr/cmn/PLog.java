@@ -12,9 +12,6 @@ import com.pcwk.ehr.ed01.AdminDao.Movie;
 
 
 
-/**
- * 
- */
 public interface PLog {
 	 Logger LOG = LogManager.getLogger();
 
