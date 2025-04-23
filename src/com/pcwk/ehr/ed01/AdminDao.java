@@ -3,12 +3,14 @@ package com.pcwk.ehr.ed01;
 import java.io.*;
 import java.util.*;
 import com.pcwk.ehr.cmn.Workdiv;
+import com.pcwk.ehr.cmn.PLog;
 
-public class AdminDao implements Workdiv<AdminDao.Movie> {
+public class AdminDao implements Workdiv<AdminDao.Movie>, PLog {
     private static final String FILE_PATH = ".\\data\\MovieList.csv";
     private List<Movie> movieList = new ArrayList<>();
 
     public static class Movie {
+        // Movie 필드는 동일
         private String title;
         private int year;
         private String country;
@@ -25,6 +27,7 @@ public class AdminDao implements Workdiv<AdminDao.Movie> {
             this.director = director;
         }
 
+        // Getter/Setter 및 toString 동일
         public String getTitle() { return title; }
         public void setTitle(String title) { this.title = title; }
         public int getYear() { return year; }
@@ -71,8 +74,9 @@ public class AdminDao implements Workdiv<AdminDao.Movie> {
                     ));
                 }
             }
+            LOG.info("📥 CSV 파일 로드 완료: " + movieList.size() + "개 항목");
         } catch (IOException e) {
-            System.out.println("❌ CSV 파일 로드 오류: " + e.getMessage());
+            LOG.error("❌ CSV 파일 로드 오류", e);
         }
     }
 
@@ -84,12 +88,11 @@ public class AdminDao implements Workdiv<AdminDao.Movie> {
                 bw.write(m.toString());
                 bw.newLine();
             }
+            LOG.info("💾 CSV 저장 완료: " + movieList.size() + "개 항목");
         } catch (IOException e) {
-            System.out.println("❌ CSV 저장 오류: " + e.getMessage());
+            LOG.error("❌ CSV 저장 오류", e);
         }
     }
-
-    // Workdiv 인터페이스 구현부
 
     @Override
     public int doSave(Movie dto) {
@@ -127,6 +130,25 @@ public class AdminDao implements Workdiv<AdminDao.Movie> {
 
     @Override
     public List<Movie> doRetrieve() {
+        movieList.sort(Comparator.comparing(Movie::getTitle));
         return movieList;
     }
+
+	@Override
+	public Movie doSelectOne(Movie dto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Movie> doRetrieve(Movie dto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int doDelete(Movie dto) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
