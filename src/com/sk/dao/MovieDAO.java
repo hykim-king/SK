@@ -1,5 +1,7 @@
 package com.sk.dao;
 
+
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -8,10 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pcwk.ehr.cmn.MovieDTO;
-
 public class MovieDAO implements WorkDiv<MovieDTO> {
-    private static final String FILE_PATH = "File/MovieList.csv";
+	private static final String FILE_PATH = "data/MovieList.csv";
 
     @Override
     public int add(MovieDTO movie) {
