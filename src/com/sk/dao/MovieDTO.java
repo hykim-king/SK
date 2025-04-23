@@ -1,4 +1,4 @@
-package com.pcwk.ehr.cmn;
+package com.sk.dao;
 
 public class MovieDTO {
     private String title;
