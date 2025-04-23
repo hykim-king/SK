@@ -1,4 +1,4 @@
-package sk01;
+package com.sk;
 
 import java.io.*;
 import java.util.*;
@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Random_C {
-    private static final String FILE_PATH = ".\\data/MovieList.csv";
+    private static final String FILE_PATH = "File/MovieList.csv";
     private static final Logger LOG = LogManager.getLogger(Random_C.class);
 
     public void recommendRandomMovie() {

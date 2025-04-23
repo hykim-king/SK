@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Director {
-    private static final String FILE_PATH = "File/director.csv";
+    private static final String FILE_PATH = ".\\data/director.csv";
     private static final Logger LOG = LogManager.getLogger(Director.class);
 
     public void showDirectorMenu() {
