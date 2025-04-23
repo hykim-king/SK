@@ -107,4 +107,11 @@ public class AdminMain implements PLog {
 
 		sc.close();
 	}
+
+
+
+	public static void run(Scanner sc) {
+		// TODO Auto-generated method stub
+		
+	}
 }

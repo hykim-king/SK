@@ -1,3 +1,4 @@
+// User.java - 사용자 추천 기능
 package sk01;
 
 import java.util.*;
@@ -8,47 +9,52 @@ import com.sk.dao.PLog;
 public class User implements PLog {
     public static void run(Scanner sc) {
         MovieDAO dao = new MovieDAO();
-        List<MovieDTO> movies = dao.getAll();
-        List<MovieDTO> result = new ArrayList<>(movies);
+        boolean running = true;
 
-        LOG.info("🌍 원하는 국가를 입력하세요:");
-        String country = sc.nextLine().trim();
-        result.removeIf(m -> !m.getCountry().equalsIgnoreCase(country));
+        LOG.info("👤 사용자 모드 시작");
 
-        LOG.info("🎭 원하는 장르를 입력하세요:");
-        String genre = sc.nextLine().trim();
-        result.removeIf(m -> !m.getGenre().equalsIgnoreCase(genre));
+        while (running) {
+            LOG.info("\n🎯 사용자 추천 메뉴:");
+            LOG.info("1. 랜덤 추천");
+            LOG.info("2. 감독 추천");
+            LOG.info("3. 종료");
+            LOG.info("입력: ");
 
-        LOG.info("📅 원하는 연도를 입력하세요:");
-        String year = sc.nextLine().trim();
-        result.removeIf(m -> !(String.valueOf(m.getYear()).equals(year)));
+            String input = sc.nextLine().trim();
 
-        if (result.isEmpty()) {
-            LOG.info("⚠️ 조건에 맞는 영화가 없습니다.");
-            return;
-        }
-
-        LOG.info("😄 지금 기분을 선택하세요:");
-        LOG.info("1. 아무거나 추천");
-        LOG.info("2. 피곤해.. 짧은 영화 추천");
-        String mood = sc.nextLine().trim();
-
-        if ("2".equals(mood)) {
-            for (MovieDTO m : result) {
-                try {
-                    int rt = Integer.parseInt(m.getRuntime().replaceAll("[^0-9]", ""));
-                    if (rt < 100) {
-                        LOG.info("💤 짧은 영화 추천: " + m);
+            switch (input) {
+                case "1":
+                    LOG.info("🎲 랜덤 추천 영화 중...");
+                    List<MovieDTO> all = dao.getAll();
+                    if (all.isEmpty()) {
+                        LOG.warn("⚠️ 추천 가능한 영화가 없습니다.");
+                    } else {
+                        MovieDTO pick = all.get(new Random().nextInt(all.size()));
+                        LOG.info("추천 영화: " + pick);
                     }
-                } catch (NumberFormatException e) {
-                    LOG.warn("⚠️ 러닝타임 형식 오류: " + m.getRuntime());
-                }
+                    break;
+                case "2":
+                    LOG.info("🎬 감독 이름을 입력하세요:");
+                    String director = sc.nextLine().trim();
+                    List<MovieDTO> directed = dao.getAll();
+                    boolean found = false;
+                    for (MovieDTO m : directed) {
+                        if (m.getDirector().equalsIgnoreCase(director)) {
+                            LOG.info("추천 영화: " + m);
+                            found = true;
+                        }
+                    }
+                    if (!found) {
+                        LOG.warn("⚠️ 해당 감독의 영화가 없습니다.");
+                    }
+                    break;
+                case "3":
+                    LOG.info("👋 사용자 모드 종료");
+                    running = false;
+                    break;
+                default:
+                    LOG.warn("❗ 잘못된 입력입니다.");
             }
-        } else {
-            MovieDTO pick = result.get(new Random().nextInt(result.size()));
-            LOG.info("🎯 추천 영화: " + pick);
         }
-
-        LOG.info("👋 사용자 추천 종료");
     }
 }
