@@ -1,16 +1,17 @@
-package com.pcwk.ehr.ed01;
+package sk01;
 
 import java.io.*;
 import java.util.*;
-import com.pcwk.ehr.cmn.Workdiv;
-import com.pcwk.ehr.cmn.PLog;
+import com.sk.dao.PLog;
+import com.sk.dao.WorkDiv;
 
-public class AdminDao implements Workdiv<AdminDao.Movie>, PLog {
-    private static final String FILE_PATH = ".\\data\\MovieList.csv";
+
+public class AdminDao implements WorkDiv<AdminDao.Movie>, PLog {
+
+    private static final String FILE_PATH = System.getProperty("user.dir") + File.separator + "data" + File.separator + "MovieList.csv";
     private List<Movie> movieList = new ArrayList<>();
 
     public static class Movie {
-        // Movie 필드는 동일
         private String title;
         private int year;
         private String country;
@@ -27,7 +28,6 @@ public class AdminDao implements Workdiv<AdminDao.Movie>, PLog {
             this.director = director;
         }
 
-        // Getter/Setter 및 toString 동일
         public String getTitle() { return title; }
         public void setTitle(String title) { this.title = title; }
         public int getYear() { return year; }
@@ -43,7 +43,7 @@ public class AdminDao implements Workdiv<AdminDao.Movie>, PLog {
 
         @Override
         public String toString() {
-            return String.format("%s,%d,%s,%s,%s,%s",
+            return String.format("%s, %d, %s, %s, %s, %s",
                     title, year, country, runtime, genre, director);
         }
     }
@@ -54,7 +54,16 @@ public class AdminDao implements Workdiv<AdminDao.Movie>, PLog {
 
     private void loadFromFile() {
         movieList.clear();
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+        File file = new File(FILE_PATH);
+        System.out.println("📁 CSV 경로: " + file.getAbsolutePath());
+        System.out.println("📁 파일 존재? " + file.exists());
+
+        if (!file.exists()) {
+            LOG.error("❌ MovieList.csv 파일이 존재하지 않습니다.");
+            return;
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             boolean isFirstLine = true;
             while ((line = br.readLine()) != null) {
@@ -74,7 +83,7 @@ public class AdminDao implements Workdiv<AdminDao.Movie>, PLog {
                     ));
                 }
             }
-            LOG.info("📥 CSV 파일 로드 완료: " + movieList.size() + "개 항목");
+            LOG.info("📥 CSV 로드 완료: " + movieList.size() + "개 항목");
         } catch (IOException e) {
             LOG.error("❌ CSV 파일 로드 오류", e);
         }
@@ -88,7 +97,7 @@ public class AdminDao implements Workdiv<AdminDao.Movie>, PLog {
                 bw.write(m.toString());
                 bw.newLine();
             }
-            LOG.info("💾 CSV 저장 완료: " + movieList.size() + "개 항목");
+            LOG.info("💾 CSV 저장 완료");
         } catch (IOException e) {
             LOG.error("❌ CSV 저장 오류", e);
         }
@@ -150,5 +159,35 @@ public class AdminDao implements Workdiv<AdminDao.Movie>, PLog {
 	public int doDelete(Movie dto) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public int add(Movie t) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(Movie t) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int delete(Movie t) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public Movie get(Movie t) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Movie> getAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

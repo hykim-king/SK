@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pcwk.ehr.cmn.MovieDTO;
-
 public class MovieDAO implements WorkDiv<MovieDTO> {
     private static final String FILE_PATH = "File/MovieList.csv";
 
