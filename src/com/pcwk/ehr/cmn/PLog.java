@@ -15,13 +15,12 @@ import com.pcwk.ehr.ed01.AdminDao.Movie;
 public interface PLog {
 	 Logger LOG = LogManager.getLogger();
 
-//	Movie doSelectOne(String title);
-//
-//	int doDelete(String title);
-//
-//	List<Movie> doRetrieve();
-//	
-	 
+	Movie doSelectOne(String title);
+
+	int doDelete(String title);
+
+	List<Movie> doRetrieve();
+//	fgdg
 	
 	
 	 
