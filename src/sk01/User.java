@@ -15,8 +15,8 @@ public class User implements PLog {
 
         while (running) {
             LOG.info("\n🎯 사용자 추천 메뉴:");
-            LOG.info("1. 랜덤 추천");
-            LOG.info("2. 감독 추천");
+            LOG.info("1. 선택한 영화 조회 : ");
+            LOG.info("2. 영화 목록 정리 : ");
             LOG.info("3. 종료");
             LOG.info("입력: ");
 
