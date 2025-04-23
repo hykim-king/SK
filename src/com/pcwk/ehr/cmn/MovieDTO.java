@@ -16,7 +16,7 @@ package com.pcwk.ehr.cmn;
 /**
  * Value Object 조상
  */
-public class DTO {
+public class MovieDTO {
 
 	private String searchDiv;// 검색구분
 	private String searchWord;// 검색어
