@@ -31,7 +31,7 @@ public class MovieRecommender {
         String selectedCountry = null;
         String selectedGenre = null;
         int yearStart = 0, yearEnd = 0;
-        int runtimeMin = 0, runtimeMax = Integer.MAX_VALUE;
+        String runtimeType = "상관없음"; // "단편", "장편", "상관없음"
 
         int step = 1;
         while (step <= 4) {
@@ -66,9 +66,9 @@ public class MovieRecommender {
                     System.out.println("0. 뒤로가기");
                     int input = Integer.parseInt(sc.nextLine());
                     if (input == 0) { step--; continue; }
-                    if (input == 1) { runtimeMin = 0; runtimeMax = 40; step++; }
-                    else if (input == 2) { runtimeMin = 41; runtimeMax = Integer.MAX_VALUE; step++; }
-                    else if (input == 3) { runtimeMin = 0; runtimeMax = Integer.MAX_VALUE; step++; }
+                    if (input == 1) { runtimeType = "단편"; step++; }
+                    else if (input == 2) { runtimeType = "장편"; step++; }
+                    else if (input == 3) { runtimeType = "상관없음"; step++; }
                 }
                 case 4 -> {
                     log.info("[4] 제작 연도 구간 선택:");
@@ -94,7 +94,6 @@ public class MovieRecommender {
                     }
                 }
             }
-            if (step > 4) break;
         }
 
         List<MovieDTO> movieList = new MovieDAO().getAll();
@@ -103,22 +102,16 @@ public class MovieRecommender {
         for (MovieDTO m : movieList) {
             String country = m.getCountry().trim();
             String genre = m.getGenre().trim();
+            String runtime = m.getRuntime().trim();
 
-            boolean countryMatch = selectedCountry.equals("상관없음") ||
-                    (selectedCountry.equals("중국/대만/홍콩") &&
-                     (country.equalsIgnoreCase("중국") || country.equalsIgnoreCase("대만") || country.equalsIgnoreCase("홍콩"))) ||
-                    country.equalsIgnoreCase(selectedCountry);
+            boolean countryMatch = "상관없음".equals(selectedCountry) ||
+                ("중국/대만/홍콩".equals(selectedCountry) &&
+                    (country.equalsIgnoreCase("중국") || country.equalsIgnoreCase("대만") || country.equalsIgnoreCase("홍콩"))) ||
+                country.equalsIgnoreCase(selectedCountry);
 
-            boolean genreMatch = selectedGenre.equals("상관없음") || genre.equalsIgnoreCase(selectedGenre);
+            boolean genreMatch = "상관없음".equals(selectedGenre) || genre.equalsIgnoreCase(selectedGenre);
             boolean yearMatch = m.getYear() >= yearStart && m.getYear() <= yearEnd;
-
-            int movieRuntime;
-            try {
-                movieRuntime = Integer.parseInt(m.getRuntime().trim());
-            } catch (NumberFormatException e) {
-                continue;
-            }
-            boolean runtimeMatch = movieRuntime >= runtimeMin && movieRuntime <= runtimeMax;
+            boolean runtimeMatch = "상관없음".equals(runtimeType) || runtime.contains(runtimeType);
 
             if (countryMatch && genreMatch && yearMatch && runtimeMatch) {
                 filtered.add(m);
@@ -129,7 +122,7 @@ public class MovieRecommender {
             log.warning(":x: 조건에 맞는 영화가 없습니다.");
         } else {
             MovieDTO result = filtered.get(new Random().nextInt(filtered.size()));
-            System.out.println("\n==================== \uD83C\uDFAC 추천 영화 ====================");
+            System.out.println("\n==================== 🎬 추천 영화 ====================");
             System.out.println("제목       : " + result.getTitle());
             System.out.println("제작년도   : " + result.getYear());
             System.out.println("국가       : " + result.getCountry());
