@@ -96,12 +96,21 @@ public class AdminMain implements PLog {
 				break;
 
 			case "4":
-				running = false;
-				System.out.println("👋 관리자 프로그램 종료");
-				break;
+			    System.out.print("검색할 영화 제목: ");
+			    String searchTitle = sc.nextLine();
+			    MovieDTO found = dao.get(new MovieDTO(searchTitle));
+			    if (found == null) {
+			        System.out.println("❌ 해당 영화가 존재하지 않습니다.");
+			    } else {
+			        System.out.println("🔍 조회 결과:");
+			        System.out.println(found);
+			    }
+			    break;
 
-			default:
-				System.out.println("❗ 잘못된 메뉴 선택입니다.");
+			case "5":
+			    running = false;
+			    System.out.println("👋 관리자 프로그램 종료");
+			    break;
 			}
 		}
 

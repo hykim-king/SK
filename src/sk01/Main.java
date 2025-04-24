@@ -1,9 +1,8 @@
 package sk01;
 
+
 import java.util.List;
 import java.util.Scanner;
-import java.util.Random;
-
 import com.sk.dao.MovieDAO;
 import com.sk.dao.MovieDTO;
 import com.sk.dao.PLog;
@@ -63,7 +62,7 @@ public class Main implements PLog {
             return;
         }
 
-        System.out.println("✅ 로그인 성공");
+
 
         MovieDAO dao = new MovieDAO();
         boolean running = true;
@@ -73,8 +72,8 @@ public class Main implements PLog {
             System.out.println("1. 영화 전체 목록 보기");
             System.out.println("2. 영화 수정");
             System.out.println("3. 영화 삭제");
-            System.out.println("4. 종료");
-            System.out.println("5. 감독 선택");
+            System.out.println("4. 영화 검색");
+            System.out.println("5. 종료");
             System.out.print("선택: ");
 
             String input = sc.nextLine();
@@ -126,10 +125,17 @@ public class Main implements PLog {
                     break;
 
                 case "4":
-                    running = false;
-                    System.out.println("👋 관리자 프로그램 종료");
+                    System.out.print("검색할 영화 제목: ");
+                    String searchTitle = sc.nextLine();
+                    MovieDTO found = dao.get(new MovieDTO(searchTitle));
+                    if (found == null) {
+                        System.out.println("❌ 해당 영화가 존재하지 않습니다.");
+                    } else {
+                        System.out.println("🔍 조회 결과:");
+                        System.out.println(found);
+                    }
                     break;
-
+                    
                 case "5":
                     Director director = new Director();
                     director.showDirectorMenu();
@@ -173,3 +179,5 @@ public class Main implements PLog {
         }
     }
 }
+
+
