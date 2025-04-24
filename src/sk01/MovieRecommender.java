@@ -77,14 +77,6 @@ public class MovieRecommender {
             System.out.print("번호 입력: ");
             int yearGroup = Integer.parseInt(sc.nextLine());
             if (yearGroup == 0) return;
-            
-            if(yearGroup >= 1 && yearGroup <= years.length) {
-            	String selectedYearLabel = years[yearGroup -1];
-            	if(selectedYearLabel.equals("상관없음")) {
-            		yearStart = Integer.MIN_VALUE;
-            		yearEnd = Integer.MAX_VALUE;
-            	}else {
-            
             switch (yearGroup) {
                 case 1 -> { yearStart = 1970; yearEnd = 1989; }
                 case 2 -> { yearStart = 1990; yearEnd = 1999; }
@@ -135,9 +127,5 @@ public class MovieRecommender {
             System.out.println("감독       : " + result.getDirector());
             System.out.println("======================================================\n");
         }
-        }
-        }
     }
 }
-
-
