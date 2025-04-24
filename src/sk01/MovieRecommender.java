@@ -1,3 +1,8 @@
+
+
+
+
+
 package sk01;
 
 import java.util.*;
@@ -91,19 +96,23 @@ public class MovieRecommender {
         List<MovieDTO> movieList = new MovieDAO().getAll();
         List<MovieDTO> filtered = new ArrayList<>();
         for (MovieDTO m : movieList) {
+        	
+        	String country = m.getCountry().trim();
+        	String genre = m.getGenre().trim();
+        			
         	boolean countryMatch = false;
         	if ("상관없음".equals(selectedCountry)) {
                 countryMatch = true;
             } else if ("중국/대만/홍콩".equals(selectedCountry)) {
-                String country = m.getCountry().trim();
+               
                 countryMatch = country.equalsIgnoreCase("중국") ||
                                country.equalsIgnoreCase("대만") ||
                                country.equalsIgnoreCase("홍콩");
             } else {
-                countryMatch = m.getCountry().equalsIgnoreCase(selectedCountry);
+                countryMatch = country.equalsIgnoreCase(selectedCountry);
             }
 
-            boolean genreMatch = selectedGenre.equals("상관없음") || m.getGenre().equalsIgnoreCase(selectedGenre);
+            boolean genreMatch = "상관없음".equals(selectedGenre) || genre.equalsIgnoreCase(selectedGenre);
             boolean yearMatch = m.getYear() >= yearStart && m.getYear() <= yearEnd;
             if (countryMatch && genreMatch && yearMatch) {
                 filtered.add(m);
@@ -114,13 +123,14 @@ public class MovieRecommender {
             log.warning(":x: 조건에 맞는 영화가 없습니다.");
         } else {
             MovieDTO result = filtered.get(new Random().nextInt(filtered.size()));
-            log.info(":white_check_mark: 추천 영화: " + result.getTitle() + " (" + result.getYear() + ")");
+            System.out.println("\n==================== 🎬 추천 영화 ====================");
+            System.out.println("제목       : " + result.getTitle());
+            System.out.println("제작년도   : " + result.getYear());
+            System.out.println("국가       : " + result.getCountry());
+            System.out.println("장르       : " + result.getGenre());
+            System.out.println("러닝타임   : " + result.getRuntime() + "분");
+            System.out.println("감독       : " + result.getDirector());
+            System.out.println("======================================================\n");
         }
     }
 }
-
-
-
-
-
-
