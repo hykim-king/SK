@@ -1,8 +1,3 @@
-
-
-
-
-
 package sk01;
 
 import java.util.*;
@@ -24,7 +19,7 @@ public class MovieRecommender {
 
     static String[] countries = { "한국", "일본", "중국/대만/홍콩", "미국", "영국", "프랑스", "독일", "기타", "상관없음" };
     static String[] genres = { "가족", "공포/호러", "다큐멘터리", "드라마", "멜로/로맨스", "미스터리/스릴러", "범죄", "사극", "애니메이션", "액션/서부극", "전쟁", "코미디", "SF/판타지", "상관없음" };
-    static String[] years = { "70~80년대", "90~99년", "00~09년", "10~19년", "20~25년" };
+    static String[] years = { "70~80년대", "90~99년", "00~09년", "10~19년", "20~25년", "상관없음" };
 
     public static void main(String[] args) {
         while (true) {
@@ -82,6 +77,14 @@ public class MovieRecommender {
             System.out.print("번호 입력: ");
             int yearGroup = Integer.parseInt(sc.nextLine());
             if (yearGroup == 0) return;
+            
+            if(yearGroup >= 1 && yearGroup <= years.length) {
+            	String selectedYearLabel = years[yearGroup -1];
+            	if(selectedYearLabel.equals("상관없음")) {
+            		yearStart = Integer.MIN_VALUE;
+            		yearEnd = Integer.MAX_VALUE;
+            	}else {
+            
             switch (yearGroup) {
                 case 1 -> { yearStart = 1970; yearEnd = 1989; }
                 case 2 -> { yearStart = 1990; yearEnd = 1999; }
@@ -132,5 +135,9 @@ public class MovieRecommender {
             System.out.println("감독       : " + result.getDirector());
             System.out.println("======================================================\n");
         }
+        }
+        }
     }
 }
+
+
