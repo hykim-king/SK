@@ -1,3 +1,4 @@
+// AdminMain.java
 package sk01;
 
 import java.util.List;
@@ -8,119 +9,117 @@ import com.sk.dao.PLog;
 import com.sk.dao.MovieDTO;
 
 public class AdminMain implements PLog {
+    private static final String ADMIN_ID = "admin";
+    private static final String ADMIN_PW = "1234";
 
-	private static final String ADMIN_ID = "admin";
-	private static final String ADMIN_PW = "1234";
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        run(sc);
+        sc.close();
+    }
 
-	
+    public static void run(Scanner sc) {
+        LOG.info("🔐 관리자 로그인 시도");
+        LOG.info("🔐 관리자 ID 입력: ");
+        if (!ADMIN_ID.equals(sc.nextLine().trim())) {
+            LOG.error("❌ 관리자 ID가 일치하지 않습니다.");
+            return;
+        }
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+        LOG.info("🔐 비밀번호 입력: ");
+        if (!ADMIN_PW.equals(sc.nextLine().trim())) {
+            LOG.error("❌ 비밀번호가 일치하지 않습니다.");
+            return;
+        }
 
-		LOG.info("🔐 관리자 로그인 시도");
+        LOG.info("✅ 관리자 로그인 성공");
 
-		System.out.print("🔐 관리자 ID: ");
-		if (!ADMIN_ID.equals(sc.nextLine())) {
-			LOG.error("❌ ID 오류");
-			System.out.println("❌ 관리자 ID가 일치하지 않습니다.");
+        MovieDAO dao = new MovieDAO();
+        boolean running = true;
 
-		}
+        while (running) {
+            LOG.info("\n📋 관리자 메뉴");
+            LOG.info("1. 영화 전체 목록 보기");
+            LOG.info("2. 영화 수정");
+            LOG.info("3. 영화 삭제");
+            LOG.info("4. 종료");
+            LOG.info("선택: ");
 
-		System.out.print("🔐 비밀번호: ");
-		if (!ADMIN_PW.equals(sc.nextLine())) {
-			LOG.error("❌ 비밀번호 오류");
-			System.out.println("❌ 비밀번호가 일치하지 않습니다.");
+            String input = sc.nextLine().trim();
+            switch (input) {
+                case "1":
+                    List<MovieDTO> list = dao.getAll();
+                    LOG.info("🎬 전체 영화 목록:");
+                    if (list.isEmpty()) {
+                        LOG.warn("⚠️ 등록된 영화가 없습니다.");
+                    } else {
+                        for (MovieDTO m : list) {
+                            LOG.info(" - {}", m);
+                        }
+                    }
+                    break;
 
-		}
+                case "2":
+                    LOG.info("수정할 영화 제목 입력: ");
+                    String originalTitle = sc.nextLine().trim();
 
-		LOG.info("✅ 관리자 로그인 성공");
-		System.out.println("✅ 로그인 성공");
+                    MovieDTO movie = dao.get(new MovieDTO(originalTitle));
+                    if (movie == null) {
+                        LOG.error("❌ 해당 영화가 존재하지 않습니다.");
+                        break;
+                    }
 
-		MovieDAO dao = new MovieDAO(); // ✅ MovieDAO 사용
-		boolean running = true;
+                    LOG.info("새 제목 [{}]: ", movie.getTitle());
+                    String upd = sc.nextLine().trim();
+                    if (!upd.isEmpty()) movie.setTitle(upd);
 
-		while (running) {
-			System.out.println("\n📋 관리자 메뉴");
-			System.out.println("1. 영화 전체 목록 보기");
-			System.out.println("2. 영화 수정");
-			System.out.println("3. 영화 삭제");
-			System.out.println("4. 종료");
-			System.out.print("선택: ");
+                    LOG.info("새 연도 [{}]: ", movie.getYear());
+                    upd = sc.nextLine().trim();
+                    if (!upd.isEmpty()) movie.setYear(Integer.parseInt(upd));
 
-			String input = sc.nextLine();
+                    LOG.info("새 나라 [{}]: ", movie.getCountry());
+                    upd = sc.nextLine().trim();
+                    if (!upd.isEmpty()) movie.setCountry(upd);
 
-			switch (input) {
-			case "1":
-				List<MovieDTO> list = dao.getAll();
-				System.out.println("🎬 전체 영화 목록:");
-				if (list.isEmpty()) {
-					System.out.println("⚠️ 등록된 영화가 없습니다.");
-				}
-				for (MovieDTO m : list) {
-					System.out.println(" - " + m);
-				}
-				break;
+                    LOG.info("새 유형 [{}]: ", movie.getRuntime());
+                    upd = sc.nextLine().trim();
+                    if (!upd.isEmpty()) movie.setRuntime(upd);
 
-			case "2":
-				System.out.print("수정할 영화 제목: ");
-				String title = sc.nextLine();
-				MovieDTO movie = dao.get(new MovieDTO(title));
-				if (movie == null) {
-					System.out.println("❌ 해당 영화가 존재하지 않습니다.");
-					break;
-				}
-				System.out.print("새 제목: ");
-				movie.setTitle(sc.nextLine());
-				System.out.print("새 연도: ");
-				movie.setYear(Integer.parseInt(sc.nextLine()));
-				System.out.print("새 나라: ");
-				movie.setCountry(sc.nextLine());
-				System.out.print("새 유형: ");
-				movie.setRuntime(sc.nextLine());
-				System.out.print("새 장르: ");
-				movie.setGenre(sc.nextLine());
-				System.out.print("새 감독: ");
-				movie.setDirector(sc.nextLine());
-				dao.update(movie);
-				System.out.println("✅ 영화 수정 완료");
-				break;
+                    LOG.info("새 장르 [{}]: ", movie.getGenre());
+                    upd = sc.nextLine().trim();
+                    if (!upd.isEmpty()) movie.setGenre(upd);
 
-			case "3":
-				System.out.print("삭제할 영화 제목: ");
-				String deleteTitle = sc.nextLine();
-				if (dao.delete(new MovieDTO(deleteTitle)) == 1) {
-					System.out.println("🗑️ 삭제 완료");
-				} else {
-					System.out.println("❌ 삭제 실패");
-				}
-				break;
+                    LOG.info("새 감독 [{}]: ", movie.getDirector());
+                    upd = sc.nextLine().trim();
+                    if (!upd.isEmpty()) movie.setDirector(upd);
 
-			case "4":
-			    System.out.print("검색할 영화 제목: ");
-			    String searchTitle = sc.nextLine();
-			    MovieDTO found = dao.get(new MovieDTO(searchTitle));
-			    if (found == null) {
-			        System.out.println("❌ 해당 영화가 존재하지 않습니다.");
-			    } else {
-			        System.out.println("🔍 조회 결과:");
-			        System.out.println(found);
-			    }
-			    break;
+                    int updatedCount = dao.update(originalTitle, movie);
+                    if (updatedCount == 1) {
+                        LOG.info("✅ 영화 수정 완료");
+                    } else {
+                        LOG.error("❌ 수정 실패 (파일 쓰기 오류)");
+                    }
+                    break;
 
-			case "5":
-			    running = false;
-			    System.out.println("👋 관리자 프로그램 종료");
-			    break;
-			}
-		}
+                case "3":
+                    LOG.info("삭제할 영화 제목 입력: ");
+                    String deleteTitle = sc.nextLine().trim();
+                    int del = dao.delete(new MovieDTO(deleteTitle));
+                    if (del == 1) {
+                        LOG.info("🗑️ 삭제 완료");
+                    } else {
+                        LOG.error("❌ 삭제 실패 (제목을 다시 확인하세요)");
+                    }
+                    break;
 
-		sc.close();
-	}
+                case "4":
+                    running = false;
+                    LOG.info("👋 관리자 프로그램 종료");
+                    break;
 
-
-
-	public static void run(Scanner sc) {
-		// TODO Auto-generated method stub
-		
-	}
+                default:
+                    LOG.error("❗ 잘못된 메뉴 선택입니다.");
+            }
+        }
+    }
 }
